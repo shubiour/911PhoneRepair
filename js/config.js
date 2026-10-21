@@ -5,7 +5,7 @@ const CONFIG = {
   businessName: "Phone Repair Anywhere",
   // WhatsApp Business number: country code + number, digits only (1 = USA)
   // Example: (561) 555-0100  ->  "15615550100"
-  whatsapp: "10000000000",
+  whatsapp: "19549557572",
   // Message pre-typed when someone taps the floating WhatsApp button
   chatMessage: {
     en: "Hi! I have a question about a repair.",
