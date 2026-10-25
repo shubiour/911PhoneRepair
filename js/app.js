@@ -163,7 +163,7 @@ const STEPS = {
       h("div", { class: "welcome-logo" },
         h("span", { class: "logo-mark big", "aria-hidden": "true",
           html: '<svg viewBox="0 0 32 32" width="56" height="56"><rect x="8" y="3" width="16" height="26" rx="3.5" fill="currentColor"/><path d="M12 22 L20 10" stroke="var(--sun)" stroke-width="3" stroke-linecap="round"/></svg>' }),
-        h("span", { class: "logo-text big" }, "Phone Repair ", h("b", {}, "Anywhere"))
+        h("span", { class: "logo-text big" }, "911 Phone", h("b", {}, "Repair"))
       ),
       h("div", { class: "hero-art", "aria-hidden": "true", html: VAN_SVG }),
       h("h1", {}, TEXT.en.welcomeTitle),
