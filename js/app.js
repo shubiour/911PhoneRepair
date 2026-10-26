@@ -76,7 +76,9 @@ function field(f) {
   else if (f.type === "select") {
     input = h("select", { id: f.id, name: f.id },
       h("option", { value: "" }, t("select")),
-      f.options.map(o => h("option", { value: o }, o)));
+      f.options.map(o => typeof o === "object"
+        ? h("option", { value: o.value }, o.label)
+        : h("option", { value: o }, o)));
   } else input = h("input", { id: f.id, name: f.id, type: f.type || "text", placeholder: f.placeholder, autocomplete: f.autocomplete });
   if (f.required) input.required = true;
   if (f.value) input.value = f.value;
@@ -88,8 +90,11 @@ function summary(rows) {
   return h("dl", { class: "summary" }, rows.map(([k, v]) => h("div", {}, h("dt", {}, k), h("dd", {}, v))));
 }
 
-/* Form that sends everything to WhatsApp */
+/* Form that sends everything to WhatsApp.
+   A location dropdown is added last; it picks which number gets the message. */
 function whatsappForm(fields, extraLines = []) {
+  fields = [...fields, { id: "location", label: t("location"), type: "select", required: true,
+    options: CONFIG.locations.map(l => ({ value: l.id, label: l.name })) }];
   const msg = h("p", { class: "form-msg", role: "status" });
   const form = h("form", { class: "form", novalidate: true },
     h("div", { class: "field-grid" }, fields.map(field)),
@@ -107,12 +112,14 @@ function whatsappForm(fields, extraLines = []) {
       if (bad) ok = false;
     });
     if (!ok) { msg.textContent = t("missing"); msg.className = "form-msg error"; return; }
+    const location = CONFIG.locations.find(l => l.id === form.elements.location.value);
     const lines = [t("msgHello"), "", ...extraLines];
     fields.forEach(f => {
-      const v = form.elements[f.id].value.trim();
-      if (v) lines.push(`${f.label}: ${v}`);
+      const el = form.elements[f.id];
+      const v = el.tagName === "SELECT" ? el.selectedOptions[0].text : el.value.trim();
+      if (el.value.trim()) lines.push(`${f.label}: ${v}`);
     });
-    const url = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(lines.join("\n"))}`;
+    const url = `https://wa.me/${location.whatsapp}?text=${encodeURIComponent(lines.join("\n"))}`;
     window.open(url, "_blank", "noopener");
     msg.textContent = t("sent"); msg.className = "form-msg ok";
   });
@@ -163,7 +170,7 @@ const STEPS = {
       h("div", { class: "welcome-logo" },
         h("span", { class: "logo-mark big", "aria-hidden": "true",
           html: '<svg viewBox="0 0 32 32" width="56" height="56"><rect x="8" y="3" width="16" height="26" rx="3.5" fill="currentColor"/><path d="M12 22 L20 10" stroke="var(--sun)" stroke-width="3" stroke-linecap="round"/></svg>' }),
-        h("span", { class: "logo-text big" }, "911 Phone", h("b", {}, "Repair"))
+        h("span", { class: "logo-text big" }, "911 Phone", h("b", {}, " Repair"))
       ),
       h("div", { class: "hero-art", "aria-hidden": "true", html: VAN_SVG }),
       h("h1", {}, TEXT.en.welcomeTitle),
