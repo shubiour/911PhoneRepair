@@ -14,6 +14,7 @@ let state = { lang: "en" };   // current answers
 /* Location pages (e.g. /fort-myers/) set <body data-location="fortMyers">.
    On those pages there is no dropdown: everything goes to that location. */
 const PAGE_LOCATION = CONFIG.locations.find(l => l.id === document.body.dataset.location);
+let nearestLocation = null;   // main page: found from the device location
 const timeline = [];          // saved snapshots for Back
 
 /* ---------- small helpers ---------- */
@@ -100,7 +101,7 @@ function summary(rows) {
 function whatsappForm(fields, extraLines = []) {
   if (PAGE_LOCATION) extraLines = [...extraLines, `${t("location")}: ${PAGE_LOCATION.name}`];
   else fields = [...fields, { id: "location", label: t("location"), type: "select", required: true,
-    options: CONFIG.locations.map(l => ({ value: l.id, label: l.name })) }];
+    options: CONFIG.locations.map(l => ({ value: l.id, label: l.name })), value: nearestLocation?.id }];
   const msg = h("p", { class: "form-msg", role: "status" });
   const form = h("form", { class: "form", novalidate: true },
     h("div", { class: "field-grid" }, fields.map(field)),
@@ -181,7 +182,7 @@ const STEPS = {
       h("div", { class: "hero-art", "aria-hidden": "true", html: VAN_SVG }),
       h("h1", {}, TEXT.en.welcomeTitle),
       h("p", { class: "welcome-sub" }, TEXT.en.welcomeSub),
-      h("p", { class: "area" }, h("span", { class: "pin" }), (PAGE_LOCATION?.area || CONFIG.area).en),
+      h("p", { class: "area" }, h("span", { class: "pin" }), ((PAGE_LOCATION || nearestLocation)?.area || CONFIG.area).en),
       h("p", { class: "lang-q" }, "Choose your language", h("br"), "Elige tu idioma"),
       cardGrid([
         { title: "English", center: true, onClick: () => go("device", { lang: "en" }) },
@@ -377,8 +378,23 @@ const VAN_SVG = `
   </g></g>
 </svg>`;
 
+/* Main page only: ask the browser where the visitor is and pre-pick the
+   nearest location. If they say no (or it fails), nothing changes. */
+function findNearestLocation() {
+  if (PAGE_LOCATION || !navigator.geolocation) return;
+  navigator.geolocation.getCurrentPosition(pos => {
+    const { latitude, longitude } = pos.coords;
+    const dist = l => (l.lat - latitude) ** 2 + ((l.lng - longitude) * Math.cos(latitude * Math.PI / 180)) ** 2;
+    nearestLocation = CONFIG.locations.reduce((a, b) => dist(b) < dist(a) ? b : a);
+    if (state.step === "welcome") render();
+    const select = app.querySelector("select#location");
+    if (select && !select.value) select.value = nearestLocation.id;
+  }, () => {}, { timeout: 10000, maximumAge: 60 * 60 * 1000 });
+}
+
 /* Start */
 state.step = "welcome";
 timeline.push({ ...state });
 history.replaceState({ i: 0 }, "");
 render();
+findNearestLocation();
