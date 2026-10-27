@@ -10,6 +10,10 @@ const topbar = document.getElementById("topbar");
 const backBtn = document.getElementById("back-btn");
 
 let state = { lang: "en" };   // current answers
+
+/* Location pages (e.g. /fort-myers/) set <body data-location="fortMyers">.
+   On those pages there is no dropdown: everything goes to that location. */
+const PAGE_LOCATION = CONFIG.locations.find(l => l.id === document.body.dataset.location);
 const timeline = [];          // saved snapshots for Back
 
 /* ---------- small helpers ---------- */
@@ -91,9 +95,11 @@ function summary(rows) {
 }
 
 /* Form that sends everything to WhatsApp.
-   A location dropdown is added last; it picks which number gets the message. */
+   On the main page a location dropdown is added last; it picks which number
+   gets the message. On a location page that location is used instead. */
 function whatsappForm(fields, extraLines = []) {
-  fields = [...fields, { id: "location", label: t("location"), type: "select", required: true,
+  if (PAGE_LOCATION) extraLines = [...extraLines, `${t("location")}: ${PAGE_LOCATION.name}`];
+  else fields = [...fields, { id: "location", label: t("location"), type: "select", required: true,
     options: CONFIG.locations.map(l => ({ value: l.id, label: l.name })) }];
   const msg = h("p", { class: "form-msg", role: "status" });
   const form = h("form", { class: "form", novalidate: true },
@@ -112,7 +118,7 @@ function whatsappForm(fields, extraLines = []) {
       if (bad) ok = false;
     });
     if (!ok) { msg.textContent = t("missing"); msg.className = "form-msg error"; return; }
-    const location = CONFIG.locations.find(l => l.id === form.elements.location.value);
+    const location = PAGE_LOCATION || CONFIG.locations.find(l => l.id === form.elements.location.value);
     const lines = [t("msgHello"), "", ...extraLines];
     fields.forEach(f => {
       const el = form.elements[f.id];
@@ -175,7 +181,7 @@ const STEPS = {
       h("div", { class: "hero-art", "aria-hidden": "true", html: VAN_SVG }),
       h("h1", {}, TEXT.en.welcomeTitle),
       h("p", { class: "welcome-sub" }, TEXT.en.welcomeSub),
-      h("p", { class: "area" }, h("span", { class: "pin" }), CONFIG.area.en),
+      h("p", { class: "area" }, h("span", { class: "pin" }), (PAGE_LOCATION?.area || CONFIG.area).en),
       h("p", { class: "lang-q" }, "Choose your language", h("br"), "Elige tu idioma"),
       cardGrid([
         { title: "English", center: true, onClick: () => go("device", { lang: "en" }) },

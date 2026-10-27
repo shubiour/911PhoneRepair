@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>911 Phone Repair Fort Myers | Door-to-door device repair</title>
+  <meta name="description" content="Phone, tablet, laptop and watch repair at your door in Fort Myers. See prices and book on WhatsApp.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📱</text></svg>">
+</head>
+<body data-location="fortMyers">
+
+  <!-- Header: shown on every step except the welcome screen -->
+  <header class="topbar" id="topbar" hidden>
+    <div class="shell topbar-row">
+      <button class="logo" type="button" data-action="home" aria-label="Go to start">
+        <span class="logo-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="30" height="30"><rect x="8" y="3" width="16" height="26" rx="3.5" fill="currentColor"/><path d="M12 22 L20 10" stroke="var(--sun)" stroke-width="3" stroke-linecap="round"/></svg>
+        </span>
+        <span class="logo-text">911 Phone <b> Repair</b></span>
+      </button>
+      <button class="back-link" type="button" data-action="back" id="back-btn"></button>
+    </div>
+  </header>
+
+  <!-- All screens are drawn into this element by js/app.js -->
+  <main id="app" class="shell" aria-live="polite"></main>
+
+  <!-- Data and translations first, then the app -->
+  <script src="../js/config.js"></script>
+  <script src="../js/catalog.js"></script>
+  <script src="../js/i18n.js"></script>
+  <script src="../js/app.js"></script>
+</body>
+</html>
