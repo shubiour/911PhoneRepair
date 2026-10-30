@@ -101,7 +101,7 @@ function summary(rows) {
 function whatsappForm(fields, extraLines = []) {
   if (PAGE_LOCATION) extraLines = [...extraLines, `${t("location")}: ${PAGE_LOCATION.name}`];
   else fields = [...fields, { id: "location", label: t("location"), type: "select", required: true,
-    options: CONFIG.locations.map(l => ({ value: l.id, label: l.name })), value: nearestLocation?.id }];
+    options: CONFIG.locations.filter(sameRegion).map(l => ({ value: l.id, label: l.name })), value: nearestLocation?.id }];
   const msg = h("p", { class: "form-msg", role: "status" });
   const form = h("form", { class: "form", novalidate: true },
     h("div", { class: "field-grid" }, fields.map(field)),
@@ -378,6 +378,9 @@ const VAN_SVG = `
   </g></g>
 </svg>`;
 
+/* Dropdown filter: only cities in the visitor's region, or all if unknown */
+const sameRegion = l => !nearestLocation || l.region === nearestLocation.region;
+
 /* Main page only: ask the browser where the visitor is and pre-pick the
    nearest location. If they say no (or it fails), nothing changes. */
 function findNearestLocation() {
@@ -388,7 +391,13 @@ function findNearestLocation() {
     nearestLocation = CONFIG.locations.reduce((a, b) => dist(b) < dist(a) ? b : a);
     if (state.step === "welcome") render();
     const select = app.querySelector("select#location");
-    if (select && !select.value) select.value = nearestLocation.id;
+    if (select) {
+      [...select.options].forEach(o => {
+        const l = CONFIG.locations.find(x => x.id === o.value);
+        if (l && !sameRegion(l)) o.remove();
+      });
+      if (!select.value) select.value = nearestLocation.id;
+    }
   }, () => {}, { timeout: 10000, maximumAge: 60 * 60 * 1000 });
 }
 
