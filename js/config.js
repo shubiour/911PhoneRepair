@@ -15,19 +15,13 @@ const CONFIG = {
   // region: once the visitor's location is known, the dropdown only lists
   // cities in their region (currently all "southwest").
   locations: [
-    { id: "fortMyers",      name: "Fort Myers",      whatsapp: "13052161675", region: "southwest", lat: 26.6406, lng: -81.8723,  // TODO: real Fort Myers number
-      area: { en: "Serving Fort Myers & nearby", es: "Servicio en Fort Myers y alrededores" } },
+    { id: "fortMyers",      name: "Fort Myers",      whatsapp: "13052161675", region: "southwest", lat: 26.6406, lng: -81.8723 },  // TODO: real Fort Myers number
     // The southwest cities below share the 305 number
-    { id: "capeCoral",      name: "Cape Coral",      whatsapp: "13052161675", region: "southwest", lat: 26.5629, lng: -81.9495,
-      area: { en: "Serving Cape Coral & nearby", es: "Servicio en Cape Coral y alrededores" } },
-    { id: "naples",         name: "Naples",          whatsapp: "13052161675", region: "southwest", lat: 26.1420, lng: -81.7948,
-      area: { en: "Serving Naples & nearby", es: "Servicio en Naples y alrededores" } },
-    { id: "lehighAcres",    name: "Lehigh Acres",    whatsapp: "13052161675", region: "southwest", lat: 26.6254, lng: -81.6248,
-      area: { en: "Serving Lehigh Acres & nearby", es: "Servicio en Lehigh Acres y alrededores" } },
-    { id: "northFortMyers", name: "North Fort Myers", whatsapp: "13052161675", region: "southwest", lat: 26.6673, lng: -81.8801,
-      area: { en: "Serving North Fort Myers & nearby", es: "Servicio en North Fort Myers y alrededores" } },
-    { id: "bonitaSprings",  name: "Bonita Springs",  whatsapp: "13052161675", region: "southwest", lat: 26.3398, lng: -81.7787,
-      area: { en: "Serving Bonita Springs & nearby", es: "Servicio en Bonita Springs y alrededores" } }
+    { id: "capeCoral",      name: "Cape Coral",      whatsapp: "13052161675", region: "southwest", lat: 26.5629, lng: -81.9495 },
+    { id: "naples",         name: "Naples",          whatsapp: "13052161675", region: "southwest", lat: 26.1420, lng: -81.7948 },
+    { id: "lehighAcres",    name: "Lehigh Acres",    whatsapp: "13052161675", region: "southwest", lat: 26.6254, lng: -81.6248 },
+    { id: "northFortMyers", name: "North Fort Myers", whatsapp: "13052161675", region: "southwest", lat: 26.6673, lng: -81.8801 },
+    { id: "bonitaSprings",  name: "Bonita Springs",  whatsapp: "13052161675", region: "southwest", lat: 26.3398, lng: -81.7787 }
   ],
   // Message pre-typed when someone taps the floating WhatsApp button
   chatMessage: {
@@ -41,9 +35,10 @@ const CONFIG = {
     instagram: "",  // TODO: e.g. "https://www.instagram.com/yourhandle"
     tiktok:    ""   // TODO: e.g. "https://www.tiktok.com/@yourhandle"
   },
+  // Service-area line on the welcome screen (same on every page)
   area: {
-    en: "Serving all of Florida",
-    es: "Servicio en todo Florida"
+    en: "Serving Fort Myers & nearby",
+    es: "Servicio en Fort Myers y alrededores"
   },
   currency: "$"
 };

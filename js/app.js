@@ -213,7 +213,7 @@ const STEPS = {
       h("div", { class: "hero-art", "aria-hidden": "true", html: VAN_SVG }),
       h("h1", {}, TEXT.en.welcomeTitle),
       h("p", { class: "welcome-sub" }, TEXT.en.welcomeSub),
-      h("p", { class: "area" }, h("span", { class: "pin" }), ((PAGE_LOCATION || nearestLocation)?.area || CONFIG.area).en),
+      h("p", { class: "area" }, h("span", { class: "pin" }), CONFIG.area.en),
       h("p", { class: "lang-q" }, "Choose your language", h("br"), "Elige tu idioma"),
       cardGrid([
         { title: "English", center: true, onClick: () => go("device", { lang: "en" }) },
