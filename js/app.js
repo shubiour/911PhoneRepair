@@ -95,7 +95,7 @@ function summary(rows) {
   return h("dl", { class: "summary" }, rows.map(([k, v]) => h("div", {}, h("dt", {}, k), h("dd", {}, v))));
 }
 
-/* Form that sends everything to WhatsApp.
+/* Form that sends everything to WhatsApp, or as a text message (SMS).
    On the main page a location dropdown is added last; it picks which number
    gets the message. On a location page that location is used instead. */
 function whatsappForm(fields, extraLines = []) {
@@ -106,7 +106,10 @@ function whatsappForm(fields, extraLines = []) {
   const form = h("form", { class: "form", novalidate: true },
     h("div", { class: "field-grid" }, fields.map(field)),
     msg,
-    h("button", { type: "submit", class: "btn btn-black" }, waIcon(), t("whatsapp")),
+    h("div", { class: "send-row" },
+      h("button", { type: "submit", value: "whatsapp", class: "btn btn-black" }, waIcon(), t("whatsapp")),
+      h("button", { type: "submit", value: "sms", class: "btn btn-black" }, smsIcon(), t("textUs"))
+    ),
     h("button", { type: "button", class: "btn btn-outline", onclick: () => restart() }, t("newRequest"))
   );
   form.addEventListener("submit", e => {
@@ -126,15 +129,42 @@ function whatsappForm(fields, extraLines = []) {
       const v = el.tagName === "SELECT" ? el.selectedOptions[0].text : el.value.trim();
       if (el.value.trim()) lines.push(`${f.label}: ${v}`);
     });
-    const url = `https://wa.me/${location.whatsapp}?text=${encodeURIComponent(lines.join("\n"))}`;
-    window.open(url, "_blank", "noopener");
-    msg.textContent = t("sent"); msg.className = "form-msg ok";
+    const text = encodeURIComponent(lines.join("\n"));
+    if (e.submitter?.value === "sms") {
+      // "?&body=" works on both iPhone and Android
+      window.location.href = `sms:+${location.sms || location.whatsapp}?&body=${text}`;
+      msg.textContent = t("smsSent");
+    } else {
+      window.open(`https://wa.me/${location.whatsapp}?text=${text}`, "_blank", "noopener");
+      msg.textContent = t("sent");
+    }
+    msg.className = "form-msg ok";
   });
   return form;
 }
 
 function waIcon() {
   return h("span", { "aria-hidden": "true", html: '<svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.7-1.2 2.2 2.2 0 0 0 .2-1.2c-.1-.1-.3-.2-.5-.3z"/></svg>' });
+}
+
+function smsIcon() {
+  return h("span", { "aria-hidden": "true", html: '<svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M4 3h16a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2zm3 6v2h2V9H7zm4 0v2h2V9h-2zm4 0v2h2V9h-2z"/></svg>' });
+}
+
+/* Facebook / Instagram / TikTok icons. All three always show; one without a
+   link in CONFIG.social is a placeholder that goes nowhere until it is set. */
+const SOCIAL = {
+  facebook:  { name: "Facebook",  path: "M14 8.5V6.8c0-.8.5-1 .9-1H17V2.1L14.1 2C10.9 2 10.2 4.4 10.2 6v2.5H8V12h2.2v10H14V12h2.8l.4-3.5H14z" },
+  instagram: { name: "Instagram", path: "M12 2.2c3.2 0 3.6 0 4.8.1 3.3.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.7 4.8-4.9 4.9-1.3.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-3.3-.1-4.8-1.7-4.9-4.9C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8C2.4 3.9 3.9 2.4 7.2 2.3 8.4 2.2 8.8 2.2 12 2.2zM12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 8.2a3.2 3.2 0 1 1 0-6.4 3.2 3.2 0 0 1 0 6.4zm5.2-9.6a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4z" },
+  tiktok:    { name: "TikTok",    path: "M16.6 2h-3.4v13.4a2.9 2.9 0 1 1-2-2.8V9.1a6.3 6.3 0 1 0 5.4 6.3V8.7a7.7 7.7 0 0 0 4.4 1.4V6.7a4.4 4.4 0 0 1-4.4-4.4V2z" }
+};
+function socialLinks() {
+  return h("nav", { class: "social", "aria-label": "Social media" }, Object.keys(SOCIAL).map(k => {
+    const url = CONFIG.social?.[k];
+    return h("a", { href: url || "#", target: url && "_blank", rel: url && "noopener", "aria-label": SOCIAL[k].name,
+      onclick: url ? null : e => e.preventDefault(),
+      html: `<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="${SOCIAL[k].path}"/></svg>` });
+  }));
 }
 
 /* ---------- lookups ---------- */
@@ -174,6 +204,7 @@ const STEPS = {
   welcome: () => ({
     bare: true,
     body: h("section", { class: "welcome" },
+      socialLinks(),
       h("div", { class: "welcome-logo" },
         h("span", { class: "logo-mark big", "aria-hidden": "true",
           html: '<svg viewBox="0 0 32 32" width="56" height="56"><rect x="8" y="3" width="16" height="26" rx="3.5" fill="currentColor"/><path d="M12 22 L20 10" stroke="var(--sun)" stroke-width="3" stroke-linecap="round"/></svg>' }),
@@ -402,6 +433,7 @@ function findNearestLocation() {
 }
 
 /* Start */
+backBtn.before(socialLinks());
 state.step = "welcome";
 timeline.push({ ...state });
 history.replaceState({ i: 0 }, "");

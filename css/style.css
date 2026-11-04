@@ -75,6 +75,13 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .welcome h1 { font-family: var(--display); font-weight: 800; font-size: clamp(2rem, 6vw, 3.2rem); line-height: 1.08; letter-spacing: -0.02em; max-width: 16ch; }
 .welcome-sub { color: var(--muted); max-width: 44ch; margin-top: .9rem; font-size: 1.1rem; }
 .area { display: inline-flex; align-items: center; gap: .5rem; font-weight: 600; color: var(--sea); margin-top: 1rem; }
+/* Social icons: top-right corner of every screen */
+.social { display: flex; gap: .4rem; }
+.social a { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--line); color: var(--sea); transition: border-color .15s, color .15s; }
+.social svg { width: 18px; height: 18px; }
+.topbar .social { margin-left: auto; margin-right: .75rem; }
+.welcome > .social { align-self: flex-end; margin: calc(-1 * clamp(2rem, 6vw, 4rem) + 1.1rem) 0 1.5rem; }
+.social a:hover { border-color: var(--sea); color: var(--ink); }
 .pin { width: 11px; height: 11px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: var(--sun); box-shadow: 0 0 0 3px var(--sea); }
 .lang-q { color: var(--muted); margin: 2.25rem 0 1.25rem; font-size: 1.1rem; }
 .lang-grid { width: min(440px, 100%); }
@@ -173,6 +180,9 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .btn:active { transform: scale(.98); }
 .btn-black { background: var(--black); color: var(--on-black); }
 .btn-black:hover { opacity: .9; }
+.send-row { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+.send-row .btn { padding-inline: .75rem; }
+@media (max-width: 420px) { .send-row { grid-template-columns: 1fr; } }
 .btn-outline { background: transparent; border-color: var(--line); color: var(--muted); font-weight: 500; }
 .btn-outline:hover { border-color: var(--muted); color: var(--ink); }
 
@@ -196,6 +206,8 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   .logo-text { font-size: 1.05rem; }
 }
 @media (max-width: 360px) { .compact.card-grid { grid-template-columns: 1fr; } }
+/* Small phones: logo mark only in the header so the social icons fit */
+@media (max-width: 400px) { .topbar .logo-text { display: none; } }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

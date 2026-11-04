@@ -38,10 +38,12 @@ const TEXT = {
     phDesc: "Describe what is happening…", phAddress: "123 Main St, City…",
     addressHint: "Only needed if you want us to come to you.",
     whatsapp: "Contact us on WhatsApp",
+    textUs: "Text us",
     newRequest: "Start a new request",
     missing: "Fill in the fields marked * to continue.",
     msgHello: "Hi! I'd like to book a repair.",
-    sent: "WhatsApp is opening with your request. Press send to finish."
+    sent: "WhatsApp is opening with your request. Press send to finish.",
+    smsSent: "Your messages app is opening with your request. Press send to finish."
   },
   es: {
     welcomeTitle: "¿Pantalla rota? La reparamos en tu puerta.",
@@ -78,9 +80,11 @@ const TEXT = {
     phDesc: "Describe lo que pasa…", phAddress: "123 Main St, Ciudad…",
     addressHint: "Solo si quieres que vayamos a ti.",
     whatsapp: "Contáctanos por WhatsApp",
+    textUs: "Envíanos un SMS",
     newRequest: "Nueva solicitud",
     missing: "Completa los campos marcados con * para continuar.",
     msgHello: "¡Hola! Quiero reservar una reparación.",
-    sent: "WhatsApp se está abriendo con tu solicitud. Presiona enviar para terminar."
+    sent: "WhatsApp se está abriendo con tu solicitud. Presiona enviar para terminar.",
+    smsSent: "Tu app de mensajes se está abriendo con tu solicitud. Presiona enviar para terminar."
   }
 };
