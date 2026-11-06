@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://911phonerepair.online/sitemap.xml
+Sitemap: https://911phonerepairllc.online/sitemap.xml
