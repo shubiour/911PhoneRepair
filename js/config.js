@@ -2,7 +2,7 @@
    BUSINESS SETTINGS  (edit these first)
    ========================================================= */
 const CONFIG = {
-  businessName: "911 Phone Repair",
+  businessName: "911 Phone Repair LLC",
   // Locations shown in the dropdown before sending. Each has its own
   // WhatsApp Business number: country code + number, digits only (1 = USA)
   // Example: (561) 555-0100  ->  "15615550100"
